@@ -10,3 +10,12 @@
 [submodule "bundle/syntastic"]
 	path = bundle/syntastic
 	url = https://github.com/scrooloose/syntastic.git
+[submodule "bundle/vim-dispatch"]
+	path = bundle/vim-dispatch
+	url = https://github.com/tpope/vim-dispatch.git
+[submodule "omnisharp-server"]
+	path = omnisharp-server
+	url = https://github.com/frarees/omnisharp-server.git
+[submodule "bundle/omnisharp-vim"]
+	path = bundle/omnisharp-vim
+	url = https://github.com/OmniSharp/omnisharp-vim.git
