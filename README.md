@@ -6,17 +6,33 @@ Make sure `~/.vim` doesn't exist.
 git clone --recursive https://github.com/frarees/dotvim.git ~/.vim
 ```
 
-# Omnisharp server
+# C# and Unity3D
+
+Choose:
+
+1. Use Unity3D's embeeded mono. 
+2. Install `mono` and set `MONO_PATH` if you do in a custom path. 
+
+__Unity3D__: Include the following lines to your `.bash_profile`
+
+```
+UNITY_PATH=/Applications/Unity/Unity.app
+
+export PATH=$UNITY_PATH/Contents/Frameworks/MonoBleedingEdge/bin:$PATH
+export MONO_PATH=$UNITY_PATH/Contents/Frameworks/Managed:$UNITY_PATH/Contents/Frameworks/Mono/lib/mono/2.0
+```
+
+Compile OmniSharp Server:
 
 ```
 xbuild ~/.vim/omnisharp-server/OmniSharp.sln
 ```
 
-## Using Unity's Mono
+# Javascript
 
-Include the following line to your `.bash_profile`
+Install `node` and `npm`. Install `standard`:
 
 ```
-export MONO_PATH=/Applications/Unity/Unity.app/Contents/Frameworks/Managed:/Applications/Unity/Unity.app/Contents/Frameworks/Mono/lib/mono/2.0
+npm install -g standard
 ```
 
