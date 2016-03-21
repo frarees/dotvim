@@ -29,3 +29,8 @@ let g:syntastic_javascript_checkers = ['standard']
 autocmd FileType javascript setlocal ts=2 sts=2 sw=2 expandtab nocindent smartindent
 autocmd FileType json setlocal ts=2 sts=2 sw=2 expandtab nocindent smartindent
 
+let g:ctrlp_custom_ignore = {
+			\ 'dir':  '\v[\/](\.git|\.hg|\.svn|Temp|Library|obj|bin|AssetBundles)$',
+			\ 'file': '\v\.(exe|so|dll|meta|csproj|unityproj|booproj|sln|userprefs|png|psd|mdb|jpg|keystore|wav|mp3|fbx|ttf|otf|tga)$',
+			\ }
+
