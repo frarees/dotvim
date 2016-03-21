@@ -19,3 +19,6 @@
 [submodule "bundle/omnisharp-vim"]
 	path = bundle/omnisharp-vim
 	url = https://github.com/OmniSharp/omnisharp-vim.git
+[submodule "bundle/vim-airline"]
+	path = bundle/vim-airline
+	url = https://github.com/vim-airline/vim-airline

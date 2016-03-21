@@ -3,9 +3,8 @@ syntax on
 filetype plugin indent on
 filetype plugin on
 
-set completeopt=longest,menuone,preview
-set splitbelow
-
+" omnisharp
+let g:OmniSharp_server_path = join([expand('<sfile>:p:h'), 'omnisharp-server', 'OmniSharp', 'bin', 'Debug', 'OmniSharp.exe'], '/')
 augroup omnisharp_commands
 	autocmd!
 	autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
@@ -22,15 +21,27 @@ augroup omnisharp_commands
 	autocmd CursorHold *.cs call OmniSharp#TypeLookupWithoutDocumentation()
 augroup END
 
-set updatetime=500
-
-let g:OmniSharp_server_path = join([expand('<sfile>:p:h'), 'omnisharp-server', 'OmniSharp', 'bin', 'Debug', 'OmniSharp.exe'], '/')
+" syntastic
 let g:syntastic_javascript_checkers = ['standard']
-autocmd FileType javascript setlocal ts=2 sts=2 sw=2 expandtab nocindent smartindent
-autocmd FileType json setlocal ts=2 sts=2 sw=2 expandtab nocindent smartindent
 
+" ctrlp
 let g:ctrlp_custom_ignore = {
 			\ 'dir':  '\v[\/](\.git|\.hg|\.svn|Temp|Library|obj|bin|AssetBundles)$',
 			\ 'file': '\v\.(exe|so|dll|meta|csproj|unityproj|booproj|sln|userprefs|png|psd|mdb|jpg|keystore|wav|mp3|fbx|ttf|otf|tga)$',
 			\ }
+
+" airline
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#bufferline#enabled = 1
+let g:airline#extensions#tabline#buffer_nr_show = 1
+
+" nerdtree
+map <C-n> :NERDTreeToggle<CR>
+
+autocmd FileType javascript setlocal ts=2 sts=2 sw=2 expandtab nocindent smartindent
+autocmd FileType json setlocal ts=2 sts=2 sw=2 expandtab nocindent smartindent
+
+set updatetime=500
+set completeopt=longest,menuone,preview
+set splitbelow
 
