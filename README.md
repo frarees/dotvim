@@ -19,7 +19,7 @@ __Unity3D__: Include the following lines to your `.bash_profile`
 UNITY_PATH=/Applications/Unity/Unity.app
 
 export PATH=$UNITY_PATH/Contents/Frameworks/MonoBleedingEdge/bin:$PATH
-export MONO_PATH=$UNITY_PATH/Contents/Frameworks/Managed:$UNITY_PATH/Contents/Frameworks/Mono/lib/mono/2.0
+export MONO_PATH=$UNITY_PATH/Contents/Frameworks/Managed:$UNITY_PATH/Contents/Frameworks/MonoBleedingEdge/lib/mono/4.5
 ```
 
 Compile OmniSharp Server:
