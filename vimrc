@@ -52,6 +52,12 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#bufferline#enabled = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1
 let g:airline#extensions#tabline#fnamemod = ':t'
+let g:airline_powerline_fonts = 1
+if !exists('g:airline_symbols')
+	let g:airline_symbols = {}
+endif
+let g:airline_symbols.space = "\ua0"
+let g:airline_theme = 'molokai'
 
 " nerdtree
 map <C-n> :NERDTreeToggle<CR>
@@ -63,3 +69,14 @@ set updatetime=500
 set completeopt=longest,menuone,preview
 set splitbelow
 set cmdheight=2
+set laststatus=2
+
+set background=light
+if !has('gui_running')
+	let g:solarized_termcolors=256
+endif
+colorscheme solarized
+
+" fonts
+set guifont=Roboto\ Mono\ for\ Powerline
+

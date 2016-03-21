@@ -5,6 +5,11 @@ Make sure `~/.vim` doesn't exist.
 ```
 git clone --recursive https://github.com/frarees/dotvim.git ~/.vim
 ```
+# Powerline fonts
+
+```
+sh ~/.vim/powerline-fonts/install.sh
+```
 
 # C# and Unity3D
 
