@@ -19,10 +19,27 @@ augroup omnisharp_commands
 	autocmd FileType cs nnoremap <C-J> :OmniSharpNavigateDown<cr>
 
 	autocmd CursorHold *.cs call OmniSharp#TypeLookupWithoutDocumentation()
+	autocmd BufEnter,TextChanged,InsertLeave *.cs SyntasticCheck
 augroup END
+
+nnoremap <leader><space> :OmniSharpGetCodeActions<cr>
+vnoremap <leader><space> :call OmniSharp#GetCodeActions('visual')<cr>
+
+nnoremap <leader>rl :OmniSharpReloadSolution<cr>
+
+nnoremap <leader>ss :OmniSharpStartServer<cr>
+nnoremap <leader>sp :OmniSharpStopServer<cr>
+
+nnoremap <leader>th :OmniSharpHighlightTypes<cr>
+
+nnoremap <leader>nm :OmniSharpRename<cr>
+nnoremap <F2> :OmniSharpRename<cr>
+
+command! -nargs=1 Rename :call OmniSharp#RenameTo("<args>")
 
 " syntastic
 let g:syntastic_javascript_checkers = ['standard']
+let g:syntastic_cs_checkers = ['semantic', 'syntax']
 
 " ctrlp
 let g:ctrlp_custom_ignore = {
@@ -44,4 +61,4 @@ autocmd FileType json setlocal ts=2 sts=2 sw=2 expandtab nocindent smartindent
 set updatetime=500
 set completeopt=longest,menuone,preview
 set splitbelow
-
+set cmdheight=2
