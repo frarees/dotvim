@@ -11,6 +11,12 @@ git clone --recursive https://github.com/frarees/dotvim.git ~/.vim
 sh ~/.vim/powerline-fonts/install.sh
 ```
 
+## OSX Terminal vim
+
+```
+sh ~/.vim/terminal-fonts.sh
+```
+
 # C# and Unity3D
 
 Choose:

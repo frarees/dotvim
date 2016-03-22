@@ -5,6 +5,7 @@ filetype plugin on
 
 " omnisharp
 let g:OmniSharp_server_path = join([expand('<sfile>:p:h'), 'omnisharp-server', 'OmniSharp', 'bin', 'Debug', 'OmniSharp.exe'], '/')
+let g:OmniSharp_timeout = 1
 augroup omnisharp_commands
 	autocmd!
 	autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
@@ -19,7 +20,10 @@ augroup omnisharp_commands
 	autocmd FileType cs nnoremap <C-J> :OmniSharpNavigateDown<cr>
 
 	autocmd CursorHold *.cs call OmniSharp#TypeLookupWithoutDocumentation()
-	autocmd BufEnter,TextChanged,InsertLeave *.cs SyntasticCheck
+
+	if v:version >= 704
+		autocmd BufEnter,TextChanged,InsertLeave *.cs SyntasticCheck
+	endif
 augroup END
 
 nnoremap <leader><space> :OmniSharpGetCodeActions<cr>
@@ -62,15 +66,18 @@ let g:airline_theme = 'molokai'
 " nerdtree
 map <C-n> :NERDTreeToggle<CR>
 
+" indents
 autocmd FileType javascript setlocal ts=2 sts=2 sw=2 expandtab nocindent smartindent
 autocmd FileType json setlocal ts=2 sts=2 sw=2 expandtab nocindent smartindent
 
+" general
 set updatetime=500
 set completeopt=longest,menuone,preview
 set splitbelow
 set cmdheight=2
 set laststatus=2
 
+" colors
 set background=light
 if !has('gui_running')
 	let g:solarized_termcolors=256
