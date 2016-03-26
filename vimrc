@@ -11,7 +11,11 @@ if has("syntax")
 	if has("autocmd")
 		if has("gui_running")
 			set background=light
-			set guifont=Roboto\ Mono\ for\ Powerline
+			if has("gui_gtk2")
+				set guifont=Roboto\ Mono\ for\ Powerline\ 11
+			else
+				set guifont=Roboto\ Mono\ for\ Powerline:h11
+			endif
 			colorscheme solarized
 		elseif &t_Co > 8
 			let g:solarized_termcolors=&t_Co
@@ -84,7 +88,7 @@ if has("autocmd")
 	let g:airline#extensions#tabline#buffer_nr_show=1
 	let g:airline#extensions#tabline#fnamemod=':t'
 	let g:airline_theme='solarized'
-	if has('gui_running')
+	if (&guifont =~ 'Powerline')
 		let g:airline_powerline_fonts = 1
 		if !exists('g:airline_symbols')
 			let g:airline_symbols = {}
