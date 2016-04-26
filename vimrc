@@ -35,6 +35,7 @@ if has("autocmd")
 		" omnisharp
 		let g:OmniSharp_server_path = join([expand('<sfile>:p:h'), 'omnisharp-server', 'OmniSharp', 'bin', 'Debug', 'OmniSharp.exe'], '/')
 		let g:OmniSharp_timeout = 1
+		let g:OmniSharp_start_server = 1
 
 		augroup omnisharp_commands
 			autocmd!
@@ -74,7 +75,6 @@ if has("autocmd")
 
 	" syntastic
 	let g:syntastic_javascript_checkers = ['standard']
-	let g:syntastic_cs_checkers = ['semantic', 'syntax']
 
 	" ctrlp
 	let g:ctrlp_custom_ignore = {
