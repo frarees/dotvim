@@ -40,3 +40,6 @@
 [submodule "bundle/vim-git"]
 	path = bundle/vim-git
 	url = https://github.com/tpope/vim-git.git
+[submodule "bundle/vim-pico8-syntax"]
+	path = bundle/vim-pico8-syntax
+	url = https://github.com/justinj/vim-pico8-syntax.git

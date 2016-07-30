@@ -47,3 +47,11 @@ Install `node` and `npm`. Install `standard`:
 npm install -g standard
 ```
 
+# PICO-8
+
+Include the following lines to your `.bash_profile`
+
+```
+export PICO_PATH=/Applications/PICO-8.app/Contents/MacOS/pico8
+```
+
