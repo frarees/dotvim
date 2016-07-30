@@ -1,6 +1,6 @@
 # Fresh setup
 
-Make sure `~/.vim` doesn't exist. 
+Make sure `~/.vim` doesn't exist
 
 ```
 git clone --recursive https://github.com/frarees/dotvim.git ~/.vim
@@ -21,7 +21,7 @@ sh ~/.vim/terminal-fonts.sh
 
 Choose:
 
-1. Use Unity3D's embeeded mono. 
+1. Use Unity3D's embeeded mono
 2. Install `mono` and set `MONO_PATH` and `MONO_MONODOCS`
 
 __Unity3D__: Include the following lines to your `.bash_profile`
@@ -38,6 +38,8 @@ export MONO_PATH=$UNITY_PATH/Contents/Frameworks/Managed:$UNITY_PATH/Contents/Fr
 v5.4 and newer
 
 ```
+UNITY_PATH=/Applications/Unity/Unity.app
+
 export PATH=$UNITY_PATH/Contents/MonoBleedingEdge/bin:$PATH
 export MONO_PATH=$UNITY_PATH/Contents/Managed:$UNITY_PATH/Contents/MonoBleedingEdge/lib/mono/4.5:$UNITY_PATH/Contents/Mono/lib/mono/2.0
 ```
