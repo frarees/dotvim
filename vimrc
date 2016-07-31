@@ -44,13 +44,17 @@ if has("autocmd")
 		let g:OmniSharp_start_server = 1
 
 		set noshowmatch
-		set completeopt=menuone,noinsert,noselect
+		if has("insert_expand")
+			set completeopt=menuone
+		endif
 		set splitbelow
 		set updatetime=500
 
 		augroup omnisharp_commands
 			autocmd!
-			autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
+			if has("insert_expand")
+				autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
+			endif
 			autocmd FileType cs nnoremap gd :OmniSharpGotoDefinition<cr>
 			autocmd FileType cs nnoremap <leader>fi :OmniSharpFindImplementations<cr>
 			autocmd FileType cs nnoremap <leader>ft :OmniSharpFindType<cr>
