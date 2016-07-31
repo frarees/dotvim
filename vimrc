@@ -90,6 +90,7 @@ if has("autocmd")
 
 	" syntastic
 	let g:syntastic_javascript_checkers = ['standard']
+	let g:syntastic_cs_checkers = ['syntax', 'semantic', 'issues']
 
 	" ctrlp
 	let g:ctrlp_custom_ignore = {
