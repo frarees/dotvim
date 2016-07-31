@@ -12,9 +12,9 @@ if has("syntax")
 		if has("gui_running")
 			set background=light
 			if has("gui_gtk2")
-				set guifont=Roboto\ Mono\ for\ Powerline\ 11
+				set guifont=Roboto\ Mono\ Light\ for\ Powerline\ 24
 			else
-				set guifont=Roboto\ Mono\ for\ Powerline:h11
+				set guifont=Roboto\ Mono\ Light\ for\ Powerline:h24
 			endif
 			colorscheme solarized
 		elseif &t_Co > 8
@@ -42,6 +42,11 @@ if has("autocmd")
 		let g:OmniSharp_server_path = join([expand('<sfile>:p:h'), 'omnisharp-server', 'OmniSharp', 'bin', 'Debug', 'OmniSharp.exe'], '/')
 		let g:OmniSharp_timeout = 1
 		let g:OmniSharp_start_server = 1
+
+		set noshowmatch
+		set completeopt=menuone,noinsert,noselect
+		set splitbelow
+		set updatetime=500
 
 		augroup omnisharp_commands
 			autocmd!
@@ -104,5 +109,4 @@ if has("autocmd")
 endif
 
 map <C-n> :NERDTreeToggle<CR>
-map <C-N> :PicoTreeToggle<CR>
 
