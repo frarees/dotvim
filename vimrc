@@ -12,9 +12,9 @@ if has("syntax")
 		if has("gui_running")
 			set background=light
 			if has("gui_gtk2")
-				set guifont=Roboto\ Mono\ Light\ for\ Powerline\ 24
+				set guifont=SF\ Mono\ Regular\ 11
 			else
-				set guifont=Roboto\ Mono\ Light\ for\ Powerline:h24
+				set guifont=SF\ Mono\ Regular:h11
 			endif
 			colorscheme solarized
 		elseif &t_Co > 8
@@ -90,7 +90,7 @@ if has("autocmd")
 
 	" syntastic
 	let g:syntastic_javascript_checkers = ['standard']
-	let g:syntastic_cs_checkers = ['syntax', 'semantic', 'issues']
+	let g:syntastic_cs_checkers = ['syntax', 'semantic']
 
 	" ctrlp
 	let g:ctrlp_custom_ignore = {
