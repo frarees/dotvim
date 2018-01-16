@@ -114,4 +114,5 @@ if has("autocmd")
 endif
 
 map <C-n> :NERDTreeToggle<CR>
+call togglebg#map("<F5>")
 
