@@ -31,17 +31,12 @@ if has("autocmd")
 	autocmd FileType javascript setlocal ts=2 sts=2 sw=2 expandtab nocindent smartindent
 	autocmd FileType json setlocal ts=2 sts=2 sw=2 expandtab nocindent smartindent
 
-	" pico8
-	com PicoTreeToggle NERDTreeToggle $HOME/Library/Application\ Support/pico-8/carts
-	com PicoOpen exec "!".$PICO_PATH
-	com -nargs=1 PicoBuild exec "!".$PICO_PATH." -run \"".<args>."\""
-	autocmd FileType pico8 nnoremap <C-b> :PicoBuild fnamemodify(bufname(1), ':p')<CR>
-
 	if has("python")
 		" omnisharp
-		let g:OmniSharp_server_path = join([expand('<sfile>:p:h'), 'omnisharp-server', 'OmniSharp', 'bin', 'Debug', 'OmniSharp.exe'], '/')
+		let g:OmniSharp_server_path = join([expand('<sfile>:p:h'), 'omnisharp-roslyn', 'run'], '/')
 		let g:OmniSharp_timeout = 1
 		let g:OmniSharp_start_server = 1
+		let g:OmniSharp_selector_ui = 'ctrlp'
 
 		set noshowmatch
 		if has("insert_expand")
