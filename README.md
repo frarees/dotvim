@@ -11,7 +11,13 @@ git clone --recursive https://github.com/frarees/dotvim.git ~/.vim
 Download OmniSharp Roslyn server:
 
 ```
-sh ~/download-omnisharp-roslyn.sh
+sh ~/.vim/download-omnisharp-roslyn.sh
+```
+
+or
+
+```
+sh ~/.vim/download-omnisharp-roslyn-stable.sh
 ```
 
 Install `libuv`:
@@ -19,6 +25,8 @@ Install `libuv`:
 ```
 brew install libuv
 ```
+
+__Note: it is no longer required to use Unity's embeeded mono, as we're forced to install mono to use Visual Studio__
 
 Set `MONO_PATH` on your `.bash_profile`:
 
@@ -39,6 +47,10 @@ UNITY_PATH=/Applications/Unity/Unity.app
 export PATH=$UNITY_PATH/Contents/Frameworks/MonoBleedingEdge/bin:$PATH
 export MONO_PATH=$UNITY_PATH/Contents/Frameworks/Managed:$UNITY_PATH/Contents/Frameworks/MonoBleedingEdge/lib/mono/4.5
 ```
+
+## Setting up vim as script editor
+
+__Note that Visual Studio is recommended as default script editor, as it is responsible for sln generation__
 
 To set MacVim as the script editor on Unity3D:
 
