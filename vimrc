@@ -10,16 +10,17 @@ if has("syntax")
 
 	if has("autocmd")
 		if has("gui_running")
-			set background=light
+			set background=dark
 			if has("gui_gtk2")
 				set guifont=SF\ Mono\ Regular\ 11
 			else
 				set guifont=SF\ Mono\ Regular:h11
 			endif
-			colorscheme solarized
+			colorscheme gruvbox
 		elseif &t_Co > 8
 			let g:solarized_termcolors=&t_Co
-			colorscheme solarized
+			let g:gruvbox_termcolors=&t_Co
+			colorscheme gruvbox
 		endif
 	endif
 endif
@@ -89,7 +90,7 @@ if has("autocmd")
 
 	" ctrlp
 	let g:ctrlp_custom_ignore = {
-				\ 'dir':  '\v[\/](\.git|\.hg|\.svn|Temp|Library|obj|bin|AssetBundles)$',
+				\ 'dir':  '\v[\/](\.git|\.hg|\.svn|\.vs|Temp|Library|obj|bin|AssetBundles)$',
 				\ 'file': '\v\.(exe|so|dll|meta|csproj|unityproj|booproj|sln|userprefs|png|psd|mdb|jpg|keystore|wav|mp3|fbx|ttf|otf|tga)$',
 				\ }
 
@@ -98,7 +99,7 @@ if has("autocmd")
 	let g:airline#extensions#bufferline#enabled=1
 	let g:airline#extensions#tabline#buffer_nr_show=1
 	let g:airline#extensions#tabline#fnamemod=':t'
-	let g:airline_theme='solarized'
+	let g:airline_theme='gruvbox'
 	if (&guifont =~ 'Powerline')
 		let g:airline_powerline_fonts = 1
 		if !exists('g:airline_symbols')
@@ -109,5 +110,6 @@ if has("autocmd")
 endif
 
 map <C-n> :NERDTreeToggle<CR>
-call togglebg#map("<F5>")
+
+" call togglebg#map("<F5>")
 
