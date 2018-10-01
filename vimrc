@@ -9,8 +9,8 @@ if has("syntax")
 	syntax on
 
 	if has("autocmd")
+		set background=dark
 		if has("gui_running")
-			set background=dark
 			if has("gui_gtk2")
 				set guifont=SF\ Mono\ Regular\ 11
 			else
