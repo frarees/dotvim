@@ -117,5 +117,16 @@ endif
 
 map <C-n> :NERDTreeToggle<CR>
 
+" perforce
+function! s:p4edit()
+	set autoread
+	echom system("p4 edit " . bufname("%"))
+	set autoread<
+endfunction
+
+command! P4Edit call <SID>p4edit()
+
+nnoremap <leader>ed :P4Edit<cr>
+
 " call togglebg#map("<F5>")
 
