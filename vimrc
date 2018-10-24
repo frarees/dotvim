@@ -94,6 +94,12 @@ if has("autocmd")
 				\ 'file': '\v\.(exe|so|dll|meta|csproj|unityproj|booproj|sln|userprefs|png|psd|mdb|jpg|keystore|wav|mp3|fbx|ttf|otf|tga)$',
 				\ }
 
+	let g:ctrlp_root_markers = ['.p4config', '.p4ignore', '.vscode', 'ProjectSettings']
+	let g:ctrlp_by_filename = 1
+	let g:ctrlp_max_files = 0
+	let g:ctrlp_max_depth = 40
+	let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:10,results:64'
+
 	" airline
 	let g:airline#extensions#tabline#enabled=1
 	let g:airline#extensions#bufferline#enabled=1
