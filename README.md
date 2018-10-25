@@ -50,15 +50,23 @@ export MONO_PATH=$UNITY_PATH/Contents/Frameworks/Managed:$UNITY_PATH/Contents/Fr
 
 ## Setting up vim as script editor
 
-__Note that Visual Studio is recommended as default script editor, as it is responsible for sln generation__
-
 To set MacVim as the script editor on Unity3D:
 
 ```
-defaults write com.unity3d.UnityEditor5.x kScriptsDefaultApp "/Applications/MacVim.app/Contents/bin/mvim"
+defaults write com.unity3d.UnityEditor5.x kScriptsDefaultApp "`eval echo ~/.vim/mvimhelper`"
 ```
 
-In Unity3D, go to `Preferences > External Tools` and set `External Script Editor Args` to `--remote-tab-silent +$(Line) "$(File)"`
+The *mvimhelper* script provided should have execute permissions (`chmod +x ~/.vim/mvimhelper`).
+This script opens MacVim via `open` with a valid `mvim://` URL.
+This is necessary for MacVim to load with the environment variables you may have set.
+Without a proper setup of them, OmniSharp wont work properly.
+You can check for loaded environment variables inside MacVim via `:!env`.
+
+In Unity3D, go to `Preferences > External Tools` and set `External Script Editor Args` to:
+
+```
+"$(File)" $(Line)
+```
 
 # Javascript
 
