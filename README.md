@@ -20,6 +20,8 @@ or
 sh ~/.vim/download-omnisharp-roslyn-stable.sh
 ```
 
+**NOTE**: Use the stable script (Roslyn 1.32.1) until OmniSharp/omnisharp-roslyn#1274 gets fixed.
+
 Install `libuv`:
 
 ```
