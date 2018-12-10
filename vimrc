@@ -1,33 +1,27 @@
-set cmdheight=2
+"set cmdheight=2
 set laststatus=2
 
 call plug#begin('~/.vim/plugged')
-Plug 'morhetz/gruvbox'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+Plug 'itchyny/lightline.vim'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-Plug 'ctrlpvim/ctrlp.vim', { 'on': 'CtrlP' }
 Plug 'vim-syntastic/syntastic'
 Plug 'OmniSharp/omnisharp-vim'
+Plug 'morhetz/gruvbox'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 call plug#end()
 
 if has("syntax")
 	syntax on
 
 	if has("autocmd")
-		set background=dark
 		if has("gui_running")
-			if has("gui_gtk2")
-				set guifont=SF\ Mono\ Regular\ 11
-			else
-				set guifont=SF\ Mono\ Regular:h11
-			endif
-			silent! colorscheme gruvbox
-		elseif &t_Co > 8
-			let g:gruvbox_termcolors=&t_Co
-			silent! colorscheme gruvbox
+			set guifont=FiraMono-Regular:h18
 		endif
+		set background=dark
+		silent! colorscheme gruvbox
 	endif
+	set noshowmode
 endif
 
 if has("autocmd")
@@ -40,9 +34,9 @@ if has("autocmd")
 	if has("python")
 		" omnisharp
 		let g:OmniSharp_server_path = join([expand('<sfile>:p:h'), 'omnisharp-roslyn', 'run'], '/')
-		let g:OmniSharp_timeout = 1
+		let g:OmniSharp_timeout = 3
 		let g:OmniSharp_start_server = 1
-		let g:OmniSharp_selector_ui = 'ctrlp'
+		let g:OmniSharp_selector_ui = 'fzf'
 
 		set noshowmatch
 		if has("insert_expand")
@@ -93,35 +87,12 @@ if has("autocmd")
 	let g:syntastic_javascript_checkers = ['standard']
 	let g:syntastic_cs_checkers = ['syntax']
 
-	" ctrlp
-	let g:ctrlp_custom_ignore = {
-				\ 'dir':  '\v[\/](\.git|\.hg|\.svn|\.vs|Temp|Library|obj|bin|AssetBundles)$',
-				\ 'file': '\v\.(exe|so|dll|meta|csproj|unityproj|booproj|sln|userprefs|png|psd|mdb|jpg|keystore|wav|mp3|fbx|ttf|otf|tga)$',
-				\ }
-
-	let g:ctrlp_root_markers = ['.p4config', '.p4ignore', '.vscode', 'ProjectSettings']
-	let g:ctrlp_by_filename = 1
-	let g:ctrlp_max_files = 0
-	let g:ctrlp_max_depth = 40
-	let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:10,results:64'
-
-	" airline
-	let g:airline#extensions#tabline#enabled=1
-	let g:airline#extensions#bufferline#enabled=1
-	let g:airline#extensions#tabline#buffer_nr_show=1
-	let g:airline#extensions#tabline#fnamemod=':t'
-	let g:airline_theme='gruvbox'
-	if (&guifont =~ 'Powerline')
-		let g:airline_powerline_fonts = 1
-		if !exists('g:airline_symbols')
-			let g:airline_symbols = {}
-		endif
-		let g:airline_symbols.space="\ua0"
-	endif
+	" lightline
+	let g:lightline = { 'colorscheme': 'darcula' }
 endif
 
 map <C-n> :NERDTreeToggle<CR>
-map <C-p> :CtrlP<CR>
+map <C-p> :Files<CR>
 
 " perforce
 function! s:p4edit()

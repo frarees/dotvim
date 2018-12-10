@@ -1,9 +1,22 @@
 # Fresh setup
 
-Make sure `~/.vim` doesn't exist
+Make sure `~/.vim` doesn't exist, and get the dotfiles:
 
 ```
 git clone --recursive https://github.com/frarees/dotvim.git ~/.vim
+```
+
+Let `vim-plug` install the plugins using `:PlugInstall`:
+
+```
+vim -c 'PlugInstall'
+```
+
+# Fonts
+
+```
+brew tap homebrew/cask-fonts
+brew cask install font-fira-mono
 ```
 
 # C#
@@ -11,13 +24,13 @@ git clone --recursive https://github.com/frarees/dotvim.git ~/.vim
 Download OmniSharp Roslyn server:
 
 ```
-sh ~/.vim/download-omnisharp-roslyn.sh
+sh ~/.vim/download-omnisharp-roslyn-stable.sh
 ```
 
 or
 
 ```
-sh ~/.vim/download-omnisharp-roslyn-stable.sh
+sh ~/.vim/download-omnisharp-roslyn.sh
 ```
 
 **NOTE**: Use the stable script (Roslyn 1.32.1) until OmniSharp/omnisharp-roslyn#1274 gets fixed.
@@ -26,28 +39,6 @@ Install `libuv`:
 
 ```
 brew install libuv
-```
-
-__Note: it is no longer required to use Unity's embeeded mono, as we're forced to install mono to use Visual Studio__
-
-Set `MONO_PATH` on your `.bash_profile`:
-
-Unity3D v5.4 and newer
-
-```
-UNITY_PATH=/Applications/Unity/Unity.app
-
-export PATH=$UNITY_PATH/Contents/MonoBleedingEdge/bin:$PATH
-export MONO_PATH=$UNITY_PATH/Contents/Managed:$UNITY_PATH/Contents/MonoBleedingEdge/lib/mono/4.5:$UNITY_PATH/Contents/Mono/lib/mono/2.0
-```
-
-Unity3D v5.3 and older
-
-```
-UNITY_PATH=/Applications/Unity/Unity.app
-
-export PATH=$UNITY_PATH/Contents/Frameworks/MonoBleedingEdge/bin:$PATH
-export MONO_PATH=$UNITY_PATH/Contents/Frameworks/Managed:$UNITY_PATH/Contents/Frameworks/MonoBleedingEdge/lib/mono/4.5
 ```
 
 ## Setting up vim as script editor
