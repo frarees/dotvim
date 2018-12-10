@@ -20,4 +20,6 @@ urlencode() {
 FILE=$1
 LINE=$2
 FILEURL=`urlencode "$FILE"`
-open "mvim://open?url=file://$FILEURL&line=$LINE"
+MVIMURL="mvim://open?url=file://$FILEURL&line=$LINE"
+#osascript -e "display notification \"`basename $FILE` at line $LINE\" with title \"mvimhelper debug\""
+open "$MVIMURL"
