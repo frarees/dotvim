@@ -1,9 +1,15 @@
 set cmdheight=2
 set laststatus=2
 
-if has("autocmd")
-	execute pathogen#infect()
-endif
+call plug#begin('~/.vim/plugged')
+Plug 'morhetz/gruvbox'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+Plug 'ctrlpvim/ctrlp.vim', { 'on': 'CtrlP' }
+Plug 'vim-syntastic/syntastic'
+Plug 'OmniSharp/omnisharp-vim'
+call plug#end()
 
 if has("syntax")
 	syntax on
@@ -16,11 +22,10 @@ if has("syntax")
 			else
 				set guifont=SF\ Mono\ Regular:h11
 			endif
-			colorscheme gruvbox
+			silent! colorscheme gruvbox
 		elseif &t_Co > 8
-			let g:solarized_termcolors=&t_Co
 			let g:gruvbox_termcolors=&t_Co
-			colorscheme gruvbox
+			silent! colorscheme gruvbox
 		endif
 	endif
 endif
@@ -116,6 +121,7 @@ if has("autocmd")
 endif
 
 map <C-n> :NERDTreeToggle<CR>
+map <C-p> :CtrlP<CR>
 
 " perforce
 function! s:p4edit()
@@ -127,6 +133,4 @@ endfunction
 command! P4Edit call <SID>p4edit()
 
 nnoremap <leader>ed :P4Edit<cr>
-
-" call togglebg#map("<F5>")
 
