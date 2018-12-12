@@ -1,8 +1,10 @@
-"set cmdheight=2
 set laststatus=2
+set showtabline=2
 
 call plug#begin('~/.vim/plugged')
+Plug 'editorconfig/editorconfig-vim'
 Plug 'itchyny/lightline.vim'
+Plug 'mgee/lightline-bufferline'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'vim-syntastic/syntastic'
 Plug 'OmniSharp/omnisharp-vim'
@@ -16,6 +18,7 @@ if has("syntax")
 
 	if has("autocmd")
 		if has("gui_running")
+			set guioptions-=e
 			set guifont=FiraMono-Regular:h18
 		endif
 		set background=dark
@@ -87,8 +90,12 @@ if has("autocmd")
 	let g:syntastic_javascript_checkers = ['standard']
 	let g:syntastic_cs_checkers = ['syntax']
 
-	" lightline
+	" lightline + bufferline
 	let g:lightline = { 'colorscheme': 'darcula' }
+	let g:lightline.tabline = { 'left': [['buffers']], 'right': [['close']] }
+	let g:lightline.component_expand = { 'buffers': 'lightline#bufferline#buffers' }
+	let g:lightline.component_type = { 'buffers': 'tabsel' }
+	let g:lightline#bufferline#show_number = 1
 endif
 
 map <C-n> :NERDTreeToggle<CR>
