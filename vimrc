@@ -37,9 +37,10 @@ if has("autocmd")
 	if has("python")
 		" omnisharp
 		let g:OmniSharp_server_path = join([expand('<sfile>:p:h'), 'omnisharp-roslyn', 'run'], '/')
-		let g:OmniSharp_timeout = 3
+		let g:OmniSharp_timeout = 5
 		let g:OmniSharp_start_server = 1
 		let g:OmniSharp_selector_ui = 'fzf'
+		let g:OmniSharp_highlight_types = 1
 
 		set noshowmatch
 		if has("insert_expand")
@@ -53,15 +54,22 @@ if has("autocmd")
 			if has("insert_expand")
 				autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
 			endif
-			autocmd FileType cs nnoremap gd :OmniSharpGotoDefinition<cr>
-			autocmd FileType cs nnoremap <leader>fi :OmniSharpFindImplementations<cr>
-			autocmd FileType cs nnoremap <leader>ft :OmniSharpFindType<cr>
-			autocmd FileType cs nnoremap <leader>fs :OmniSharpFindSymbol<cr>
-			autocmd FileType cs nnoremap <leader>fu :OmniSharpFindUsages<cr>
-			autocmd FileType cs nnoremap <leader>fm :OmniSharpFindMembers<cr>
-			autocmd FileType cs nnoremap <leader>dc :OmniSharpDocumentation<cr>
-			autocmd FileType cs nnoremap <C-K> :OmniSharpNavigateUp<cr>
-			autocmd FileType cs nnoremap <C-J> :OmniSharpNavigateDown<cr>
+
+			autocmd FileType cs nnoremap <buffer> gd :OmniSharpGotoDefinition<cr>
+
+			autocmd FileType cs nnoremap <buffer> <leader>fi :OmniSharpFindImplementations<cr>
+			autocmd FileType cs nnoremap <buffer> <leader>ft :OmniSharpFindType<cr>
+			autocmd FileType cs nnoremap <buffer> <leader>fs :OmniSharpFindSymbol<cr>
+			autocmd FileType cs nnoremap <buffer> <leader>fu :OmniSharpFindUsages<cr>
+			autocmd FileType cs nnoremap <buffer> <leader>fm :OmniSharpFindMembers<cr>
+			autocmd FileType cs nnoremap <buffer> <leader>dc :OmniSharpDocumentation<cr>
+			autocmd FileType cs nnoremap <buffer> <leader>th :OmniSharpHighlightTypes<cr>
+
+			autocmd FileType cs nnoremap <buffer> <C-\> :OmniSharpSignatureHelp<cr>
+			autocmd FileType cs inoremap <buffer> <C-\> <C-o> :OmniSharpSignatureHelp<cr>
+
+			autocmd FileType cs nnoremap <buffer> <C-K> :OmniSharpNavigateUp<cr>
+			autocmd FileType cs nnoremap <buffer> <C-J> :OmniSharpNavigateDown<cr>
 
 			autocmd CursorHold *.cs call OmniSharp#TypeLookupWithoutDocumentation()
 
@@ -71,7 +79,7 @@ if has("autocmd")
 		augroup END
 
 		nnoremap <leader><space> :OmniSharpGetCodeActions<cr>
-		vnoremap <leader><space> :call OmniSharp#GetCodeActions('visual')<cr>
+		xnoremap <leader><space> :call OmniSharp#GetCodeActions('visual')<cr>
 
 		nnoremap <leader>rl :OmniSharpReloadSolution<cr>
 
