@@ -100,10 +100,11 @@ if has("autocmd")
 
 	" lightline + bufferline
 	let g:lightline = { 'colorscheme': 'darcula' }
-	let g:lightline.tabline = { 'left': [['buffers']], 'right': [['close']] }
+	let g:lightline.tabline = { 'left': [['buffers']], 'right': [['readonly']] }
 	let g:lightline.component_expand = { 'buffers': 'lightline#bufferline#buffers' }
 	let g:lightline.component_type = { 'buffers': 'tabsel' }
 	let g:lightline#bufferline#show_number = 1
+	let g:lightline#bufferline#filename_modifier = ':t'
 endif
 
 map <C-n> :NERDTreeToggle<CR>
