@@ -117,7 +117,13 @@ function! s:p4edit()
 	set autoread<
 endfunction
 
+function! s:p4annotate()
+	echom system("p4 annotate -u " . bufname("%") . " | sed '" . (line(".") + 1) . "!d'")
+endfunction
+
 command! P4Edit call <SID>p4edit()
+command! P4Annotate call <SID>p4annotate()
 
 nnoremap <leader>ed :P4Edit<cr>
+nnoremap <leader>who :P4Annotate<cr>
 
