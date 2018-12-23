@@ -21,29 +21,13 @@ brew cask install font-fira-mono
 
 # C#
 
-Download OmniSharp Roslyn server:
-
-```
-sh ~/.vim/download-omnisharp-roslyn-stable.sh
-```
-
-or
-
-```
-sh ~/.vim/download-omnisharp-roslyn.sh
-```
-
-**NOTE**: Use the stable script (Roslyn 1.32.1) until OmniSharp/omnisharp-roslyn#1274 gets fixed.
-
 Install `libuv`:
 
 ```
 brew install libuv
 ```
 
-## Setting up vim as script editor
-
-To set MacVim as the script editor on Unity3D:
+## Setting up MacVim as script editor in Unity3D
 
 ```
 defaults write com.unity3d.UnityEditor5.x kScriptsDefaultApp "`eval echo ~/.vim/mvimhelper`"

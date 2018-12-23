@@ -36,7 +36,6 @@ if has("autocmd")
 
 	if has("python")
 		" omnisharp
-		let g:OmniSharp_server_path = join([expand('<sfile>:p:h'), 'omnisharp-roslyn', 'run'], '/')
 		let g:OmniSharp_timeout = 5
 		let g:OmniSharp_start_server = 1
 		let g:OmniSharp_selector_ui = 'fzf'
