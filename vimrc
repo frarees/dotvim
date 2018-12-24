@@ -6,11 +6,12 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'itchyny/lightline.vim'
 Plug 'mgee/lightline-bufferline'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-Plug 'vim-syntastic/syntastic'
 Plug 'OmniSharp/omnisharp-vim'
 Plug 'morhetz/gruvbox'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+Plug 'w0rp/ale'
+Plug 'maximbaz/lightline-ale'
 call plug#end()
 
 if has("syntax")
@@ -71,10 +72,6 @@ if has("autocmd")
 			autocmd FileType cs nnoremap <buffer> <C-J> :OmniSharpNavigateDown<cr>
 
 			autocmd CursorHold *.cs call OmniSharp#TypeLookupWithoutDocumentation()
-
-			if v:version >= 704
-				autocmd BufEnter,TextChanged,InsertLeave *.cs SyntasticCheck
-			endif
 		augroup END
 
 		nnoremap <leader><space> :OmniSharpGetCodeActions<cr>
@@ -93,15 +90,51 @@ if has("autocmd")
 		command! -nargs=1 Rename :call OmniSharp#RenameTo("<args>")
 	endif
 
-	" syntastic
-	let g:syntastic_javascript_checkers = ['standard']
-	let g:syntastic_cs_checkers = ['syntax']
+	" ale
+	let g:ale_linters = {
+		\ 'cs': ['OmniSharp'],
+		\ 'javascript': ['standard'],
+		\ }
+	let g:ale_fixers = {
+		\ 'javascript': ['standard'],
+		\ }
 
 	" lightline + bufferline
-	let g:lightline = { 'colorscheme': 'darcula' }
-	let g:lightline.tabline = { 'left': [['buffers']], 'right': [['readonly']] }
-	let g:lightline.component_expand = { 'buffers': 'lightline#bufferline#buffers' }
-	let g:lightline.component_type = { 'buffers': 'tabsel' }
+	let g:lightline = {
+		\ 'colorscheme': 'darcula'
+		\ }
+	let g:lightline.tabline = {
+		\ 'left': [
+		\	['buffers'],
+		\ ],
+		\ 'right': [
+		\	['readonly']
+		\ ] }
+	let g:lightline.active = {
+		\ 'left': [
+		\	['mode', 'paste'],
+		\	['readonly', 'filename', 'modified']
+		\ ],
+		\ 'right': [
+		\	['linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok'],
+		\	['lineinfo'],
+		\	['percent'],
+		\	['fileformat', 'fileencoding', 'filetype'],
+		\ ] }
+	let g:lightline.component_expand = {
+		\ 'buffers': 'lightline#bufferline#buffers',
+		\ 'linter_checking': 'lightline#ale#checking',
+		\ 'linter_warnings': 'lightline#ale#warnings',
+		\ 'linter_errors': 'lightline#ale#errors',
+		\ 'linter_ok': 'lightline#ale#ok',
+		\ }
+	let g:lightline.component_type = {
+		\ 'buffers': 'tabsel',
+		\ 'linter_checking': 'left',
+		\ 'linter_warnings': 'warning',
+		\ 'linter_errors': 'error',
+		\ 'linter_ok': 'left',
+		\ }
 	let g:lightline#bufferline#show_number = 1
 	let g:lightline#bufferline#filename_modifier = ':t'
 endif
