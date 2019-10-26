@@ -12,6 +12,7 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'w0rp/ale'
 Plug 'maximbaz/lightline-ale'
+Plug 'leafgarland/typescript-vim'
 call plug#end()
 
 if has("syntax")
@@ -35,12 +36,16 @@ if has("autocmd")
 	autocmd FileType javascript setlocal ts=2 sts=2 sw=2 expandtab nocindent smartindent
 	autocmd FileType json setlocal ts=2 sts=2 sw=2 expandtab nocindent smartindent
 
+	" fzf toggle
+	autocmd! FileType fzf tnoremap <buffer> <C-p> <c-c>
+
 	if has("python")
 		" omnisharp
 		let g:OmniSharp_timeout = 5
 		let g:OmniSharp_start_server = 1
 		let g:OmniSharp_selector_ui = 'fzf'
 		let g:OmniSharp_highlight_types = 1
+		let g:OmniSharp_server_stdio = 1
 
 		set noshowmatch
 		if has("insert_expand")
@@ -71,6 +76,8 @@ if has("autocmd")
 			autocmd FileType cs nnoremap <buffer> <C-K> :OmniSharpNavigateUp<cr>
 			autocmd FileType cs nnoremap <buffer> <C-J> :OmniSharpNavigateDown<cr>
 
+			" autocmd FileType cs nnoremap <buffer> <C-p> :OmniSharpFiles<cr>
+
 			autocmd CursorHold *.cs call OmniSharp#TypeLookupWithoutDocumentation()
 		augroup END
 
@@ -98,6 +105,7 @@ if has("autocmd")
 	let g:ale_fixers = {
 		\ 'javascript': ['standard'],
 		\ }
+	let g:ale_c_parse_makefile = 1
 
 	" lightline + bufferline
 	let g:lightline = {
@@ -139,8 +147,17 @@ if has("autocmd")
 	let g:lightline#bufferline#filename_modifier = ':t'
 endif
 
-map <C-n> :NERDTreeToggle<CR>
-map <C-p> :Files<CR>
+" custom files
+function! s:files()
+	if exists('b:OmniSharp_buf_server')
+		call fzf#vim#files(fnamemodify(b:OmniSharp_buf_server, ':p:h')) 
+	else
+		call fzf#vim#files('')
+	endif
+endfunction
+
+command! CustomFiles call <SID>files()
+nnoremap <C-p> :CustomFiles<CR>
 
 " perforce
 function! s:p4edit()
@@ -159,3 +176,6 @@ command! P4Annotate call <SID>p4annotate()
 nnoremap <leader>ed :P4Edit<cr>
 nnoremap <leader>who :P4Annotate<cr>
 
+nnoremap <leader>at :ALEToggle<CR>
+
+nnoremap <C-n> :NERDTreeToggle<CR>

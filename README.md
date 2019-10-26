@@ -19,15 +19,21 @@ brew tap homebrew/cask-fonts
 brew cask install font-fira-mono
 ```
 
-# C#
+# OmniSharp
 
-Install `libuv`:
+Install via:
 
 ```
-brew install libuv
+vim -c 'set ft=cs' -c 'OmniSharpInstall'
 ```
 
-## Setting up MacVim as script editor in Unity3D
+Add the following export to your profile (`.zprofile`, `.bash_profile`, ...)
+
+```
+export FrameworkPathOverride=~/.cache/omnisharp-vim/omnisharp-roslyn/lib/mono/4.5
+```
+
+# MacVim as script editor in Unity3D
 
 ```
 defaults write com.unity3d.UnityEditor5.x kScriptsDefaultApp "`eval echo ~/.vim/mvimhelper`"
@@ -45,12 +51,3 @@ In Unity3D, go to `Preferences > External Tools` and set `External Script Editor
 "$(File)" $(Line)
 ```
 
-# Javascript
-
-Install `node` and `npm`.
-
-Install `standard`:
-
-```
-npm install -g standard
-```
