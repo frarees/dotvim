@@ -1,25 +1,24 @@
 #!/bin/sh
 
-urlencode() {
-	# urlencode <string>
-	old_lc_collate=$LC_COLLATE
-	LC_COLLATE=C
-
-	local length="${#1}"
-	for (( i = 0; i < length; i++ )); do
-		local c="${1:i:1}"
-		case $c in
-			[a-zA-Z0-9.~_-]) printf "$c" ;;
-			*) printf '%%%02X' "'$c" ;;
-		esac
-	done
-
-	LC_COLLATE=$old_lc_collate
+function urlenc
+{
+	/usr/bin/python -c "import sys, urllib as ul; print ul.quote(sys.argv[1],'/')" "$1"
 }
 
 FILE=$1
 LINE=$2
-FILEURL=`urlencode "$FILE"`
-MVIMURL="mvim://open?url=file://$FILEURL&line=$LINE"
-#osascript -e "display notification \"`basename $FILE` at line $LINE\" with title \"mvimhelper debug\""
-open "$MVIMURL"
+
+ENC_FILE=`urlenc "$FILE"`
+# re-encode, since MacVim mistakenly decodes it
+# https://github.com/macvim-dev/macvim/pull/1002
+ENC_FILE=`urlenc "$ENC_FILE"`
+
+URI="mvim://open?url=file://$ENC_FILE&line=$LINE"
+
+#osascript -e "display notification \"$URI\" with title \"mvimhelper debug\""
+
+open $URI
+
+# going the 'open' way doesn't work as MacVim
+# requires args to be set before the file
+#open -a /Applications/MacVim.app "$FILE" --args --servername UNITY +$LINE
