@@ -44,7 +44,7 @@ if has("autocmd")
 		let g:OmniSharp_timeout = 5
 		let g:OmniSharp_start_server = 1
 		let g:OmniSharp_selector_ui = 'fzf'
-		let g:OmniSharp_highlight_types = 1
+		let g:OmniSharp_highlight_types = 3
 		let g:OmniSharp_server_stdio = 1
 
 		set noshowmatch
@@ -56,20 +56,19 @@ if has("autocmd")
 
 		augroup omnisharp_commands
 			autocmd!
-			if has("insert_expand")
-				autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
-			endif
+
+			autocmd CursorHold *.cs OmniSharpTypeLookup
 
 			autocmd FileType cs nnoremap <buffer> gd :OmniSharpGotoDefinition<cr>
-
 			autocmd FileType cs nnoremap <buffer> <leader>fi :OmniSharpFindImplementations<cr>
-			autocmd FileType cs nnoremap <buffer> <leader>ft :OmniSharpFindType<cr>
 			autocmd FileType cs nnoremap <buffer> <leader>fs :OmniSharpFindSymbol<cr>
 			autocmd FileType cs nnoremap <buffer> <leader>fu :OmniSharpFindUsages<cr>
-			autocmd FileType cs nnoremap <buffer> <leader>fm :OmniSharpFindMembers<cr>
-			autocmd FileType cs nnoremap <buffer> <leader>dc :OmniSharpDocumentation<cr>
-			autocmd FileType cs nnoremap <buffer> <leader>th :OmniSharpHighlightTypes<cr>
 
+			autocmd FileType cs nnoremap <buffer> <leader>fm :OmniSharpFindMembers<cr>
+
+			autocmd FileType cs nnoremap <buffer> <leader>fx :OmniSharpFixUsings<cr>
+			autocmd FileType cs nnoremap <buffer> <leader>tt :OmniSharpTypeLookup<cr>
+			autocmd FileType cs nnoremap <buffer> <leader>dc :OmniSharpDocumentation<cr>
 			autocmd FileType cs nnoremap <buffer> <C-\> :OmniSharpSignatureHelp<cr>
 			autocmd FileType cs inoremap <buffer> <C-\> <C-o> :OmniSharpSignatureHelp<cr>
 
@@ -78,18 +77,16 @@ if has("autocmd")
 
 			" autocmd FileType cs nnoremap <buffer> <C-p> :OmniSharpFiles<cr>
 
-			autocmd CursorHold *.cs call OmniSharp#TypeLookupWithoutDocumentation()
+			autocmd FileType cs nnoremap <buffer> <leader>cc :OmniSharpGlobalCodeCheck<cr>
 		augroup END
 
 		nnoremap <leader><space> :OmniSharpGetCodeActions<cr>
 		xnoremap <leader><space> :call OmniSharp#GetCodeActions('visual')<cr>
 
-		nnoremap <leader>rl :OmniSharpReloadSolution<cr>
-
 		nnoremap <leader>ss :OmniSharpStartServer<cr>
 		nnoremap <leader>sp :OmniSharpStopServer<cr>
 
-		nnoremap <leader>th :OmniSharpHighlightTypes<cr>
+		nnoremap <leader>rs :OmniSharpRestartAllServers<cr>
 
 		nnoremap <leader>nm :OmniSharpRename<cr>
 		nnoremap <F2> :OmniSharpRename<cr>
