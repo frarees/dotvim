@@ -1,6 +1,11 @@
 set laststatus=2
 set showtabline=2
 
+let filetype_m='objc'
+
+set exrc
+set secure
+
 call plug#begin('~/.vim/plugged')
 Plug 'editorconfig/editorconfig-vim'
 Plug 'itchyny/lightline.vim'
@@ -13,6 +18,8 @@ Plug 'junegunn/fzf.vim'
 Plug 'w0rp/ale'
 Plug 'maximbaz/lightline-ale'
 Plug 'leafgarland/typescript-vim'
+Plug 'lluchs/vim-wren'
+Plug 'ziglang/zig.vim'
 call plug#end()
 
 if has("syntax")
@@ -21,7 +28,7 @@ if has("syntax")
 	if has("autocmd")
 		if has("gui_running")
 			set guioptions-=e
-			set guifont=FiraMono-Regular:h18
+			set guifont=FiraMono-Regular:h16
 		endif
 		set background=dark
 		silent! colorscheme gruvbox
@@ -39,17 +46,22 @@ if has("autocmd")
 	" fzf toggle
 	autocmd! FileType fzf tnoremap <buffer> <C-p> <c-c>
 
+	" disable bell
+	set noerrorbells visualbell t_vb=
+	autocmd GUIEnter * set visualbell t_vb=
+
 	if has("python")
 		" omnisharp
 		let g:OmniSharp_timeout = 5
 		let g:OmniSharp_start_server = 1
 		let g:OmniSharp_selector_ui = 'fzf'
-		let g:OmniSharp_highlight_types = 3
+		let g:OmniSharp_highlighting = 0
 		let g:OmniSharp_server_stdio = 1
 
 		set noshowmatch
 		if has("insert_expand")
-			set completeopt=menuone
+			set completeopt=longest,menuone,preview,popuphidden
+			set completepopup=highlight:Pmenu,border:off
 		endif
 		set splitbelow
 		set updatetime=500
@@ -69,6 +81,8 @@ if has("autocmd")
 			autocmd FileType cs nnoremap <buffer> <leader>fx :OmniSharpFixUsings<cr>
 			autocmd FileType cs nnoremap <buffer> <leader>tt :OmniSharpTypeLookup<cr>
 			autocmd FileType cs nnoremap <buffer> <leader>dc :OmniSharpDocumentation<cr>
+			autocmd FileType cs nnoremap <buffer> <leader>pd :OmniSharpPreviewDefinition<cr>
+			autocmd FileType cs nnoremap <buffer> <leader>pi :OmniSharpPreviewImplementation<cr>
 			autocmd FileType cs nnoremap <buffer> <C-\> :OmniSharpSignatureHelp<cr>
 			autocmd FileType cs inoremap <buffer> <C-\> <C-o> :OmniSharpSignatureHelp<cr>
 
@@ -78,6 +92,8 @@ if has("autocmd")
 			" autocmd FileType cs nnoremap <buffer> <C-p> :OmniSharpFiles<cr>
 
 			autocmd FileType cs nnoremap <buffer> <leader>cc :OmniSharpGlobalCodeCheck<cr>
+
+			autocmd FileType cs :OmniSharpSetCd
 		augroup END
 
 		nnoremap <leader><space> :OmniSharpGetCodeActions<cr>
@@ -144,17 +160,13 @@ if has("autocmd")
 	let g:lightline#bufferline#filename_modifier = ':t'
 endif
 
-" custom files
-function! s:files()
+" set cd to sln path, if possible
+command! OmniSharpSetCd call <SID>setcd()
+function! s:setcd()
 	if exists('b:OmniSharp_buf_server')
-		call fzf#vim#files(fnamemodify(b:OmniSharp_buf_server, ':p:h')) 
-	else
-		call fzf#vim#files('')
+		exe 'cd ' . fnamemodify(b:OmniSharp_buf_server, ':p:h')
 	endif
 endfunction
-
-command! CustomFiles call <SID>files()
-nnoremap <C-p> :CustomFiles<CR>
 
 " perforce
 function! s:p4edit()
@@ -176,3 +188,5 @@ nnoremap <leader>who :P4Annotate<cr>
 nnoremap <leader>at :ALEToggle<CR>
 
 nnoremap <C-n> :NERDTreeToggle<CR>
+
+nnoremap <C-p> :Files<CR>
