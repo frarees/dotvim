@@ -3,9 +3,6 @@ set showtabline=2
 
 let filetype_m='objc'
 
-set exrc
-set secure
-
 call plug#begin('~/.vim/plugged')
 Plug 'editorconfig/editorconfig-vim'
 Plug 'itchyny/lightline.vim'
@@ -20,6 +17,8 @@ Plug 'maximbaz/lightline-ale'
 Plug 'leafgarland/typescript-vim'
 Plug 'lluchs/vim-wren'
 Plug 'ziglang/zig.vim'
+Plug 'tpope/vim-fugitive'
+Plug 'ludovicchabant/vim-gutentags'
 call plug#end()
 
 if has("syntax")
@@ -50,65 +49,63 @@ if has("autocmd")
 	set noerrorbells visualbell t_vb=
 	autocmd GUIEnter * set visualbell t_vb=
 
-	if has("python")
-		" omnisharp
-		let g:OmniSharp_timeout = 5
-		let g:OmniSharp_start_server = 1
-		let g:OmniSharp_selector_ui = 'fzf'
-		let g:OmniSharp_highlighting = 0
-		let g:OmniSharp_server_stdio = 1
+	" omnisharp
+	let g:OmniSharp_timeout = 5
+	let g:OmniSharp_start_server = 1
+	let g:OmniSharp_selector_ui = 'fzf'
+	let g:OmniSharp_highlighting = 0
+	let g:OmniSharp_server_stdio = 1
 
-		set noshowmatch
-		if has("insert_expand")
-			set completeopt=longest,menuone,preview,popuphidden
-			set completepopup=highlight:Pmenu,border:off
-		endif
-		set splitbelow
-		set updatetime=500
-
-		augroup omnisharp_commands
-			autocmd!
-
-			autocmd CursorHold *.cs OmniSharpTypeLookup
-
-			autocmd FileType cs nnoremap <buffer> gd :OmniSharpGotoDefinition<cr>
-			autocmd FileType cs nnoremap <buffer> <leader>fi :OmniSharpFindImplementations<cr>
-			autocmd FileType cs nnoremap <buffer> <leader>fs :OmniSharpFindSymbol<cr>
-			autocmd FileType cs nnoremap <buffer> <leader>fu :OmniSharpFindUsages<cr>
-
-			autocmd FileType cs nnoremap <buffer> <leader>fm :OmniSharpFindMembers<cr>
-
-			autocmd FileType cs nnoremap <buffer> <leader>fx :OmniSharpFixUsings<cr>
-			autocmd FileType cs nnoremap <buffer> <leader>tt :OmniSharpTypeLookup<cr>
-			autocmd FileType cs nnoremap <buffer> <leader>dc :OmniSharpDocumentation<cr>
-			autocmd FileType cs nnoremap <buffer> <leader>pd :OmniSharpPreviewDefinition<cr>
-			autocmd FileType cs nnoremap <buffer> <leader>pi :OmniSharpPreviewImplementation<cr>
-			autocmd FileType cs nnoremap <buffer> <C-\> :OmniSharpSignatureHelp<cr>
-			autocmd FileType cs inoremap <buffer> <C-\> <C-o> :OmniSharpSignatureHelp<cr>
-
-			autocmd FileType cs nnoremap <buffer> <C-K> :OmniSharpNavigateUp<cr>
-			autocmd FileType cs nnoremap <buffer> <C-J> :OmniSharpNavigateDown<cr>
-
-			" autocmd FileType cs nnoremap <buffer> <C-p> :OmniSharpFiles<cr>
-
-			autocmd FileType cs nnoremap <buffer> <leader>cc :OmniSharpGlobalCodeCheck<cr>
-
-			autocmd FileType cs :OmniSharpSetCd
-		augroup END
-
-		nnoremap <leader><space> :OmniSharpGetCodeActions<cr>
-		xnoremap <leader><space> :call OmniSharp#GetCodeActions('visual')<cr>
-
-		nnoremap <leader>ss :OmniSharpStartServer<cr>
-		nnoremap <leader>sp :OmniSharpStopServer<cr>
-
-		nnoremap <leader>rs :OmniSharpRestartAllServers<cr>
-
-		nnoremap <leader>nm :OmniSharpRename<cr>
-		nnoremap <F2> :OmniSharpRename<cr>
-
-		command! -nargs=1 Rename :call OmniSharp#RenameTo("<args>")
+	set noshowmatch
+	if has("insert_expand")
+		set completeopt=longest,menuone,preview,popuphidden
+		set completepopup=highlight:Pmenu,border:off
 	endif
+	set splitbelow
+	set updatetime=500
+
+	augroup omnisharp_commands
+		autocmd!
+
+		autocmd CursorHold *.cs OmniSharpTypeLookup
+
+		autocmd FileType cs nnoremap <buffer> gd :OmniSharpGotoDefinition<cr>
+		autocmd FileType cs nnoremap <buffer> <leader>fi :OmniSharpFindImplementations<cr>
+		autocmd FileType cs nnoremap <buffer> <leader>fs :OmniSharpFindSymbol<cr>
+		autocmd FileType cs nnoremap <buffer> <leader>fu :OmniSharpFindUsages<cr>
+
+		autocmd FileType cs nnoremap <buffer> <leader>fm :OmniSharpFindMembers<cr>
+
+		autocmd FileType cs nnoremap <buffer> <leader>fx :OmniSharpFixUsings<cr>
+		autocmd FileType cs nnoremap <buffer> <leader>tt :OmniSharpTypeLookup<cr>
+		autocmd FileType cs nnoremap <buffer> <leader>dc :OmniSharpDocumentation<cr>
+		autocmd FileType cs nnoremap <buffer> <leader>pd :OmniSharpPreviewDefinition<cr>
+		autocmd FileType cs nnoremap <buffer> <leader>pi :OmniSharpPreviewImplementation<cr>
+		autocmd FileType cs nnoremap <buffer> <C-\> :OmniSharpSignatureHelp<cr>
+		autocmd FileType cs inoremap <buffer> <C-\> <C-o> :OmniSharpSignatureHelp<cr>
+
+		autocmd FileType cs nnoremap <buffer> <C-K> :OmniSharpNavigateUp<cr>
+		autocmd FileType cs nnoremap <buffer> <C-J> :OmniSharpNavigateDown<cr>
+
+		" autocmd FileType cs nnoremap <buffer> <C-p> :OmniSharpFiles<cr>
+
+		autocmd FileType cs nnoremap <buffer> <leader>cc :OmniSharpGlobalCodeCheck<cr>
+
+		autocmd FileType cs :OmniSharpSetCd
+	augroup END
+
+	nnoremap <leader><space> :OmniSharpGetCodeActions<cr>
+	xnoremap <leader><space> :call OmniSharp#GetCodeActions('visual')<cr>
+
+	nnoremap <leader>ss :OmniSharpStartServer<cr>
+	nnoremap <leader>sp :OmniSharpStopServer<cr>
+
+	nnoremap <leader>rs :OmniSharpRestartAllServers<cr>
+
+	nnoremap <leader>nm :OmniSharpRename<cr>
+	nnoremap <F2> :OmniSharpRename<cr>
+
+	command! -nargs=1 Rename :call OmniSharp#RenameTo("<args>")
 
 	" ale
 	let g:ale_linters = {
