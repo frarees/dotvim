@@ -19,6 +19,7 @@ Plug 'lluchs/vim-wren'
 Plug 'ziglang/zig.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'ludovicchabant/vim-gutentags'
+Plug 'majutsushi/tagbar'
 call plug#end()
 
 if has("syntax")
@@ -49,6 +50,8 @@ if has("autocmd")
 	set noerrorbells visualbell t_vb=
 	autocmd GUIEnter * set visualbell t_vb=
 
+	let g:tagbar_autofocus = 1
+
 	" omnisharp
 	let g:OmniSharp_timeout = 5
 	let g:OmniSharp_start_server = 1
@@ -56,56 +59,46 @@ if has("autocmd")
 	let g:OmniSharp_highlighting = 0
 	let g:OmniSharp_server_stdio = 1
 
-	set noshowmatch
 	if has("insert_expand")
 		set completeopt=longest,menuone,preview,popuphidden
 		set completepopup=highlight:Pmenu,border:off
 	endif
-	set splitbelow
-	set updatetime=500
 
 	augroup omnisharp_commands
 		autocmd!
 
 		autocmd CursorHold *.cs OmniSharpTypeLookup
 
-		autocmd FileType cs nnoremap <buffer> gd :OmniSharpGotoDefinition<cr>
-		autocmd FileType cs nnoremap <buffer> <leader>fi :OmniSharpFindImplementations<cr>
-		autocmd FileType cs nnoremap <buffer> <leader>fs :OmniSharpFindSymbol<cr>
-		autocmd FileType cs nnoremap <buffer> <leader>fu :OmniSharpFindUsages<cr>
+		autocmd FileType cs nmap <silent> <buffer> gd <Plug>(omnisharp_go_to_definition)
+		autocmd FileType cs nmap <silent> <buffer> <Leader>osfu <Plug>(omnisharp_find_usages)
+		autocmd FileType cs nmap <silent> <buffer> <Leader>osfi <Plug>(omnisharp_find_implementations)
+		autocmd FileType cs nmap <silent> <buffer> <Leader>ospd <Plug>(omnisharp_preview_definition)
+		autocmd FileType cs nmap <silent> <buffer> <Leader>ospi <Plug>(omnisharp_preview_implementations)
+		autocmd FileType cs nmap <silent> <buffer> <Leader>ost <Plug>(omnisharp_type_lookup)
+		autocmd FileType cs nmap <silent> <buffer> <Leader>osd <Plug>(omnisharp_documentation)
+		autocmd FileType cs nmap <silent> <buffer> <Leader>osfs <Plug>(omnisharp_find_symbol)
+		autocmd FileType cs nmap <silent> <buffer> <Leader>osfx <Plug>(omnisharp_fix_usings)
+		autocmd FileType cs nmap <silent> <buffer> <C-\> <Plug>(omnisharp_signature_help)
+		autocmd FileType cs imap <silent> <buffer> <C-\> <Plug>(omnisharp_signature_help)
 
-		autocmd FileType cs nnoremap <buffer> <leader>fm :OmniSharpFindMembers<cr>
+		autocmd FileType cs nmap <silent> <buffer> [[ <Plug>(omnisharp_navigate_up)
+		autocmd FileType cs nmap <silent> <buffer> ]] <Plug>(omnisharp_navigate_down)
 
-		autocmd FileType cs nnoremap <buffer> <leader>fx :OmniSharpFixUsings<cr>
-		autocmd FileType cs nnoremap <buffer> <leader>tt :OmniSharpTypeLookup<cr>
-		autocmd FileType cs nnoremap <buffer> <leader>dc :OmniSharpDocumentation<cr>
-		autocmd FileType cs nnoremap <buffer> <leader>pd :OmniSharpPreviewDefinition<cr>
-		autocmd FileType cs nnoremap <buffer> <leader>pi :OmniSharpPreviewImplementation<cr>
-		autocmd FileType cs nnoremap <buffer> <C-\> :OmniSharpSignatureHelp<cr>
-		autocmd FileType cs inoremap <buffer> <C-\> <C-o> :OmniSharpSignatureHelp<cr>
+		autocmd FileType cs nmap <silent> <buffer> <Leader>osgcc <Plug>(omnisharp_global_code_check)
 
-		autocmd FileType cs nnoremap <buffer> <C-K> :OmniSharpNavigateUp<cr>
-		autocmd FileType cs nnoremap <buffer> <C-J> :OmniSharpNavigateDown<cr>
+		autocmd FileType cs nmap <silent> <buffer> <Leader>osca <Plug>(omnisharp_code_actions)
+		autocmd FileType cs xmap <silent> <buffer> <Leader>osca <Plug>(omnisharp_code_actions)
 
-		" autocmd FileType cs nnoremap <buffer> <C-p> :OmniSharpFiles<cr>
+		autocmd FileType cs nmap <silent> <buffer> <Leader>os= <Plug>(omnisharp_code_format)
 
-		autocmd FileType cs nnoremap <buffer> <leader>cc :OmniSharpGlobalCodeCheck<cr>
+		autocmd FileType cs nmap <silent> <buffer> <Leader>osnm <Plug>(omnisharp_rename)
+
+		autocmd FileType cs nmap <silent> <buffer> <Leader>osre <Plug>(omnisharp_restart_server)
+		autocmd FileType cs nmap <silent> <buffer> <Leader>osst <Plug>(omnisharp_start_server)
+		autocmd FileType cs nmap <silent> <buffer> <Leader>ossp <Plug>(omnisharp_stop_server)
 
 		autocmd FileType cs :OmniSharpSetCd
 	augroup END
-
-	nnoremap <leader><space> :OmniSharpGetCodeActions<cr>
-	xnoremap <leader><space> :call OmniSharp#GetCodeActions('visual')<cr>
-
-	nnoremap <leader>ss :OmniSharpStartServer<cr>
-	nnoremap <leader>sp :OmniSharpStopServer<cr>
-
-	nnoremap <leader>rs :OmniSharpRestartAllServers<cr>
-
-	nnoremap <leader>nm :OmniSharpRename<cr>
-	nnoremap <F2> :OmniSharpRename<cr>
-
-	command! -nargs=1 Rename :call OmniSharp#RenameTo("<args>")
 
 	" ale
 	let g:ale_linters = {
@@ -179,11 +172,12 @@ endfunction
 command! P4Edit call <SID>p4edit()
 command! P4Annotate call <SID>p4annotate()
 
-nnoremap <leader>ed :P4Edit<cr>
-nnoremap <leader>who :P4Annotate<cr>
+nnoremap <leader>ed :P4Edit<CR>
+nnoremap <leader>who :P4Annotate<CR>
 
 nnoremap <leader>at :ALEToggle<CR>
 
-nnoremap <C-n> :NERDTreeToggle<CR>
+nnoremap <silent> <C-n> :NERDTreeToggle<CR>
+nnoremap <silent> <C-K> :TagbarToggle<CR>
+nnoremap <silent> <C-p> :Files<CR>
 
-nnoremap <C-p> :Files<CR>
