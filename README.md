@@ -33,21 +33,14 @@ Add the following export to your profile (`.zprofile`, `.bash_profile`, ...)
 export FrameworkPathOverride=~/.cache/omnisharp-vim/omnisharp-roslyn/lib/mono/4.5
 ```
 
-# MacVim as script editor in Unity3D
+# Vim-based editors in Unity3D
+
+Use [Easy Editor](https://github.com/frarees/easyeditor).
+
+
+# Go
 
 ```
-defaults write com.unity3d.UnityEditor5.x kScriptsDefaultApp "`eval echo ~/.vim/mvimhelper`"
-```
-
-The *mvimhelper* script provided should have execute permissions (`chmod +x ~/.vim/mvimhelper`).
-This script opens MacVim via `open` with a valid `mvim://` URL.
-This is necessary for MacVim to load with the environment variables you may have set.
-Without a proper setup of them, OmniSharp wont work properly.
-You can check for loaded environment variables inside MacVim via `:!env`.
-
-In Unity3D, go to `Preferences > External Tools` and set `External Script Editor Args` to:
-
-```
-"$(File)" $(Line)
+brew install golangci/tap/golangci-lint
 ```
 

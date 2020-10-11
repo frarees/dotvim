@@ -14,21 +14,20 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'w0rp/ale'
 Plug 'maximbaz/lightline-ale'
-Plug 'leafgarland/typescript-vim'
-Plug 'lluchs/vim-wren'
-Plug 'ziglang/zig.vim'
-Plug 'tpope/vim-fugitive'
-Plug 'ludovicchabant/vim-gutentags'
-Plug 'majutsushi/tagbar'
+Plug 'AndrewRadev/bufferize.vim'
 call plug#end()
 
 if has("syntax")
 	syntax on
 
 	if has("autocmd")
-		if has("gui_running")
+		if has("gui_running") && !has("gui_vimr")
 			set guioptions-=e
-			set guifont=FiraMono-Regular:h16
+			if has("macunix")
+				set guifont=FiraMono-Regular:h16
+			elseif has("unix")
+				set guifont=FiraMono-Regular \16
+			endif
 		endif
 		set background=dark
 		silent! colorscheme gruvbox
@@ -58,10 +57,16 @@ if has("autocmd")
 	let g:OmniSharp_selector_ui = 'fzf'
 	let g:OmniSharp_highlighting = 0
 	let g:OmniSharp_server_stdio = 1
+	"let g:OmniSharp_proc_debug = 1
+	"let g:OmniSharp_loglevel = 'debug'
 
 	if has("insert_expand")
-		set completeopt=longest,menuone,preview,popuphidden
-		set completepopup=highlight:Pmenu,border:off
+		if has("nvim")
+			set completeopt=menuone,preview
+		else
+			set completeopt=menuone,preview,popuphidden
+			set completepopup=highlight:Pmenu,border:off
+		endif
 	endif
 
 	augroup omnisharp_commands
@@ -69,6 +74,7 @@ if has("autocmd")
 
 		autocmd CursorHold *.cs OmniSharpTypeLookup
 
+		" default
 		autocmd FileType cs nmap <silent> <buffer> gd <Plug>(omnisharp_go_to_definition)
 		autocmd FileType cs nmap <silent> <buffer> <Leader>osfu <Plug>(omnisharp_find_usages)
 		autocmd FileType cs nmap <silent> <buffer> <Leader>osfi <Plug>(omnisharp_find_implementations)
@@ -89,6 +95,9 @@ if has("autocmd")
 		autocmd FileType cs nmap <silent> <buffer> <Leader>osca <Plug>(omnisharp_code_actions)
 		autocmd FileType cs xmap <silent> <buffer> <Leader>osca <Plug>(omnisharp_code_actions)
 
+		autocmd FileType cs nmap <silent> <buffer> <Leader>os. <Plug>(omnisharp_code_action_repeat)
+		autocmd FileType cs xmap <silent> <buffer> <Leader>os. <Plug>(omnisharp_code_action_repeat)
+
 		autocmd FileType cs nmap <silent> <buffer> <Leader>os= <Plug>(omnisharp_code_format)
 
 		autocmd FileType cs nmap <silent> <buffer> <Leader>osnm <Plug>(omnisharp_rename)
@@ -97,12 +106,21 @@ if has("autocmd")
 		autocmd FileType cs nmap <silent> <buffer> <Leader>osst <Plug>(omnisharp_start_server)
 		autocmd FileType cs nmap <silent> <buffer> <Leader>ossp <Plug>(omnisharp_stop_server)
 
-		autocmd FileType cs :OmniSharpSetCd
+		" custom
+		autocmd FileType cs nmap <silent> <buffer> <Leader>gd <Plug>(omnisharp_go_to_definition)
+		autocmd FileType cs nmap <silent> <buffer> <Leader>fu <Plug>(omnisharp_find_usages)
+		autocmd FileType cs nmap <silent> <buffer> <Leader>fi <Plug>(omnisharp_find_implementations)
+		autocmd FileType cs nmap <silent> <buffer> <Leader>fs <Plug>(omnisharp_find_symbol)
+		autocmd FileType cs nmap <silent> <buffer> <Leader>pd <Plug>(omnisharp_preview_definition)
+		autocmd FileType cs nmap <silent> <buffer> <Leader>dc <Plug>(omnisharp_documentation)
+
+		"autocmd FileType cs :OmniSharpSetCd
 	augroup END
 
 	" ale
 	let g:ale_linters = {
 		\ 'cs': ['OmniSharp'],
+		\ 'go': ['golangci-lint'],
 		\ 'javascript': ['standard'],
 		\ }
 	let g:ale_fixers = {
