@@ -15,6 +15,8 @@ Plug 'junegunn/fzf.vim'
 Plug 'w0rp/ale'
 Plug 'maximbaz/lightline-ale'
 Plug 'AndrewRadev/bufferize.vim'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'sheerun/vim-polyglot'
 call plug#end()
 
 if has("syntax")
@@ -49,16 +51,22 @@ if has("autocmd")
 	set noerrorbells visualbell t_vb=
 	autocmd GUIEnter * set visualbell t_vb=
 
-	let g:tagbar_autofocus = 1
-
 	" omnisharp
 	let g:OmniSharp_timeout = 5
 	let g:OmniSharp_start_server = 1
 	let g:OmniSharp_selector_ui = 'fzf'
+	let g:OmniSharp_selector_findusages = 'fzf'
 	let g:OmniSharp_highlighting = 0
 	let g:OmniSharp_server_stdio = 1
+	let g:OmniSharp_diagnostic_showid = 1
 	"let g:OmniSharp_proc_debug = 1
 	"let g:OmniSharp_loglevel = 'debug'
+	let g:OmniSharp_diagnostic_exclude_paths = [
+		\ 'obj\\',
+		\ '[Tt]emp\\',
+		\ '\.nuget\\',
+		\ '\<AssemblyInfo\.cs\>',
+		\ ]
 
 	if has("insert_expand")
 		if has("nvim")
@@ -72,7 +80,7 @@ if has("autocmd")
 	augroup omnisharp_commands
 		autocmd!
 
-		autocmd CursorHold *.cs OmniSharpTypeLookup
+		"autocmd CursorHold *.cs OmniSharpTypeLookup
 
 		" default
 		autocmd FileType cs nmap <silent> <buffer> gd <Plug>(omnisharp_go_to_definition)
@@ -176,26 +184,8 @@ function! s:setcd()
 	endif
 endfunction
 
-" perforce
-function! s:p4edit()
-	set autoread
-	echom system("p4 edit " . bufname("%"))
-	set autoread<
-endfunction
-
-function! s:p4annotate()
-	echom system("p4 annotate -u " . bufname("%") . " | sed '" . (line(".") + 1) . "!d'")
-endfunction
-
-command! P4Edit call <SID>p4edit()
-command! P4Annotate call <SID>p4annotate()
-
-nnoremap <leader>ed :P4Edit<CR>
-nnoremap <leader>who :P4Annotate<CR>
-
 nnoremap <leader>at :ALEToggle<CR>
 
 nnoremap <silent> <C-n> :NERDTreeToggle<CR>
-nnoremap <silent> <C-K> :TagbarToggle<CR>
 nnoremap <silent> <C-p> :Files<CR>
 
