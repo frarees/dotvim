@@ -51,6 +51,8 @@ if has("autocmd")
 	set noerrorbells visualbell t_vb=
 	autocmd GUIEnter * set visualbell t_vb=
 
+	let g:coc_node_path = '/usr/local/bin/node'
+
 	" omnisharp
 	let g:OmniSharp_timeout = 5
 	let g:OmniSharp_start_server = 1
