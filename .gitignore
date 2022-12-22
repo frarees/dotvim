@@ -11,3 +11,6 @@ tags
 
 /omnisharp-roslyn
 /plugged
+
+/autoload/plug.vim
+

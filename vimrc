@@ -3,20 +3,21 @@ set showtabline=2
 
 let filetype_m='objc'
 
-call plug#begin('~/.vim/plugged')
+call plug#begin()
 Plug 'editorconfig/editorconfig-vim'
 Plug 'itchyny/lightline.vim'
 Plug 'mgee/lightline-bufferline'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'OmniSharp/omnisharp-vim'
 Plug 'morhetz/gruvbox'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'w0rp/ale'
 Plug 'maximbaz/lightline-ale'
 Plug 'AndrewRadev/bufferize.vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'sheerun/vim-polyglot'
+Plug 'wsdjeg/vim-fetch'
 call plug#end()
 
 if has("syntax")
@@ -51,7 +52,9 @@ if has("autocmd")
 	set noerrorbells visualbell t_vb=
 	autocmd GUIEnter * set visualbell t_vb=
 
-	let g:coc_node_path = '/usr/local/bin/node'
+	if has('unix')
+		let g:coc_node_path = '/usr/local/bin/node'
+	endif
 
 	" omnisharp
 	let g:OmniSharp_timeout = 5

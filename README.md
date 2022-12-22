@@ -1,12 +1,22 @@
-# Fresh setup
+# Setup
 
-Make sure `~/.vim` doesn't exist, and get the dotfiles:
+Clone the repository into the vimrc directory.
+
+Unix:
 
 ```
-git clone --recursive https://github.com/frarees/dotvim.git ~/.vim
+git clone https://github.com/frarees/dotvim.git ~/.vim
 ```
 
-Let `vim-plug` install the plugins using `:PlugInstall`:
+Windows:
+
+```
+git clone https://github.com/frarees/dotvim.git ~/vimfiles
+```
+
+Install `vim-plug` (see [instructions](https://github.com/junegunn/vim-plug#installation)).
+
+Afterwards, install the plugins:
 
 ```
 vim -c 'PlugInstall'
@@ -14,10 +24,14 @@ vim -c 'PlugInstall'
 
 # Fonts
 
+macOS:
+
 ```
 brew tap homebrew/cask-fonts
 brew install --cask font-fira-mono
 ```
+
+Windows: download fonts from the [repository](https://github.com/mozilla/Fira).
 
 # OmniSharp
 
@@ -27,7 +41,10 @@ Install via:
 vim -c 'set ft=cs' -c 'OmniSharpInstall'
 ```
 
-Set the config file in `~/.omnisharp/omnisharp.json`:
+Set the config file in:
+
+* `~/.omnisharp/omnisharp.json` (Unix)
+* `%USERPROFILE%\.omnisharp\omnisharp.json` (Windows)
 
 ```json
 {
@@ -46,17 +63,7 @@ Set the config file in `~/.omnisharp/omnisharp.json`:
 }
 ```
 
-# Vim-based editors in Unity
+# Unity
 
 Use [Easy Editor](https://github.com/frarees/easyeditor).
-
-If you invoke an editor instance on your own, make sure it has a valid `FrameworkPathOverride` environment variable loaded.
-
-Export it into your shell profile (`.zprofile`, `.bash_profile`, ...):
-
-```
-export FrameworkPathOverride=/Applications/Unity/Hub/Editor/2020.2.3f1/Unity.app/Contents/MonoBleedingEdge/lib/mono/4.7.1-api
-```
-
-**NOTE: Match your current Unity installation path.**
 
