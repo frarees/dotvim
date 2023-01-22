@@ -1,23 +1,22 @@
 set laststatus=2
-set showtabline=2
-
-let filetype_m='objc'
+"set showtabline=2
+set showtabline=0
+set number
+set termguicolors
 
 call plug#begin()
+Plug 'tpope/vim-sensible'
 Plug 'editorconfig/editorconfig-vim'
-Plug 'itchyny/lightline.vim'
-Plug 'mgee/lightline-bufferline'
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'OmniSharp/omnisharp-vim'
 Plug 'morhetz/gruvbox'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'w0rp/ale'
-Plug 'maximbaz/lightline-ale'
 Plug 'AndrewRadev/bufferize.vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'sheerun/vim-polyglot'
 Plug 'wsdjeg/vim-fetch'
+Plug 'wellle/context.vim'
 call plug#end()
 
 if has("syntax")
@@ -25,13 +24,27 @@ if has("syntax")
 
 	if has("autocmd")
 		if has("gui_running") && !has("gui_vimr")
-			set guioptions-=e
+			set guioptions-=e " no tab pages
+			set guioptions-=m " no menu bar
+			set guioptions-=T " no toolbar
+
+			" hide scrollbars
+			set guioptions-=r
+			set guioptions-=l
+			set guioptions-=R
+			set guioptions-=L
+
 			if has("macunix")
 				set guifont=FiraMono-Regular:h16
-			elseif has("unix")
+			elseif has("win32")
+				set guifont=Fixedsys
+			else
 				set guifont=FiraMono-Regular \16
 			endif
 		endif
+
+		let g:gruvbox_italic=0
+		let g:gruvbox_bold=0
 		set background=dark
 		silent! colorscheme gruvbox
 	endif
@@ -42,12 +55,6 @@ if has("autocmd")
 	filetype plugin indent on
 	filetype plugin on
 
-	autocmd FileType javascript setlocal ts=2 sts=2 sw=2 expandtab nocindent smartindent
-	autocmd FileType json setlocal ts=2 sts=2 sw=2 expandtab nocindent smartindent
-
-	" fzf toggle
-	autocmd! FileType fzf tnoremap <buffer> <C-p> <c-c>
-
 	" disable bell
 	set noerrorbells visualbell t_vb=
 	autocmd GUIEnter * set visualbell t_vb=
@@ -56,7 +63,10 @@ if has("autocmd")
 		let g:coc_node_path = '/usr/local/bin/node'
 	endif
 
-	" omnisharp
+	" context.vim
+	let g:context_highlight_tag = '<hide>'
+
+	" omnisharp-vim
 	let g:OmniSharp_timeout = 5
 	let g:OmniSharp_start_server = 1
 	let g:OmniSharp_selector_ui = 'fzf'
@@ -64,6 +74,7 @@ if has("autocmd")
 	let g:OmniSharp_highlighting = 0
 	let g:OmniSharp_server_stdio = 1
 	let g:OmniSharp_diagnostic_showid = 1
+	"let g:OmniSharp_server_use_net6 = 1
 	"let g:OmniSharp_proc_debug = 1
 	"let g:OmniSharp_loglevel = 'debug'
 	let g:OmniSharp_diagnostic_exclude_paths = [
@@ -73,41 +84,90 @@ if has("autocmd")
 		\ '\<AssemblyInfo\.cs\>',
 		\ ]
 
+	" omnisharp style overrides
+	hi! def OmniSharpActiveParameter cterm=underline gui=underline 
+
 	if has("insert_expand")
 		if has("nvim")
 			set completeopt=menuone,preview
 		else
-			set completeopt=menuone,preview,popuphidden
+			"set completeopt=menuone,preview,popuphidden
+			set completeopt=longest,menuone,popuphidden
 			set completepopup=highlight:Pmenu,border:off
 		endif
 	endif
 
+	set statusline=%<%f\ %h%m%r%=
+
+	function! LinterStatus() abort
+			let l:counts = ale#statusline#Count(bufnr(''))
+
+			let l:all_errors = l:counts.error + l:counts.style_error
+			let l:all_non_errors = l:counts.total - l:all_errors
+
+			return l:counts.total == 0 ? '' : printf(
+			\   '%dW %dE',
+			\   all_non_errors,
+			\   all_errors
+			\)
+	endfunction
+
+	set statusline+=%{LinterStatus()}
+
+	" ale
+	let g:ale_linters = {
+		\ 'cs': ['OmniSharp']
+		\ }
+	let g:ale_disable_lsp = 1
+
+	" fzf
+	let g:fzf_preview_window = []
+	let g:fzf_force_termguicolors = 1
+	let g:fzf_colors =
+		\ { 'fg':      ['fg', 'Normal'],
+		\   'bg':      ['bg', 'Normal'],
+		\   'hl':      ['fg', 'Comment'],
+		\   'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+		\   'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+		\   'hl+':     ['fg', 'Statement'],
+		\   'info':    ['fg', 'PreProc'],
+		\   'border':  ['fg', 'Ignore'],
+		\   'prompt':  ['fg', 'Conditional'],
+		\   'pointer': ['fg', 'Exception'],
+		\   'marker':  ['fg', 'Keyword'],
+		\   'spinner': ['fg', 'Label'],
+		\   'header':  ['fg', 'Comment'] } 
+
 	augroup omnisharp_commands
 		autocmd!
 
+		" Show type information automatically when the cursor stops moving.
+		" Note that the type is echoed to the Vim command line, and will overwrite
+		" any other messages in this space including e.g. ALE linting messages.
 		"autocmd CursorHold *.cs OmniSharpTypeLookup
 
-		" default
-		autocmd FileType cs nmap <silent> <buffer> gd <Plug>(omnisharp_go_to_definition)
-		autocmd FileType cs nmap <silent> <buffer> <Leader>osfu <Plug>(omnisharp_find_usages)
-		autocmd FileType cs nmap <silent> <buffer> <Leader>osfi <Plug>(omnisharp_find_implementations)
+		" The following commands are contextual, based on the cursor position.
+		autocmd FileType cs nmap <silent> <buffer> <Leader>gd <Plug>(omnisharp_go_to_definition)
+		autocmd FileType cs nmap <silent> <buffer> <Leader>fu <Plug>(omnisharp_find_usages)
+		autocmd FileType cs nmap <silent> <buffer> <Leader>fi <Plug>(omnisharp_find_implementations)
 		autocmd FileType cs nmap <silent> <buffer> <Leader>ospd <Plug>(omnisharp_preview_definition)
 		autocmd FileType cs nmap <silent> <buffer> <Leader>ospi <Plug>(omnisharp_preview_implementations)
 		autocmd FileType cs nmap <silent> <buffer> <Leader>ost <Plug>(omnisharp_type_lookup)
-		autocmd FileType cs nmap <silent> <buffer> <Leader>osd <Plug>(omnisharp_documentation)
-		autocmd FileType cs nmap <silent> <buffer> <Leader>osfs <Plug>(omnisharp_find_symbol)
+		autocmd FileType cs nmap <silent> <buffer> <Leader>dc <Plug>(omnisharp_documentation)
+		autocmd FileType cs nmap <silent> <buffer> <Leader>fs <Plug>(omnisharp_find_symbol)
 		autocmd FileType cs nmap <silent> <buffer> <Leader>osfx <Plug>(omnisharp_fix_usings)
 		autocmd FileType cs nmap <silent> <buffer> <C-\> <Plug>(omnisharp_signature_help)
 		autocmd FileType cs imap <silent> <buffer> <C-\> <Plug>(omnisharp_signature_help)
 
+		" Navigate up and down by method/property/field
 		autocmd FileType cs nmap <silent> <buffer> [[ <Plug>(omnisharp_navigate_up)
 		autocmd FileType cs nmap <silent> <buffer> ]] <Plug>(omnisharp_navigate_down)
-
+		" Find all code errors/warnings for the current solution and populate the quickfix window
 		autocmd FileType cs nmap <silent> <buffer> <Leader>osgcc <Plug>(omnisharp_global_code_check)
-
+		" Contextual code actions (uses fzf, vim-clap, CtrlP or unite.vim selector when available)
 		autocmd FileType cs nmap <silent> <buffer> <Leader>osca <Plug>(omnisharp_code_actions)
 		autocmd FileType cs xmap <silent> <buffer> <Leader>osca <Plug>(omnisharp_code_actions)
-
+		" Repeat the last code action performed (does not use a selector)
 		autocmd FileType cs nmap <silent> <buffer> <Leader>os. <Plug>(omnisharp_code_action_repeat)
 		autocmd FileType cs xmap <silent> <buffer> <Leader>os. <Plug>(omnisharp_code_action_repeat)
 
@@ -118,79 +178,9 @@ if has("autocmd")
 		autocmd FileType cs nmap <silent> <buffer> <Leader>osre <Plug>(omnisharp_restart_server)
 		autocmd FileType cs nmap <silent> <buffer> <Leader>osst <Plug>(omnisharp_start_server)
 		autocmd FileType cs nmap <silent> <buffer> <Leader>ossp <Plug>(omnisharp_stop_server)
-
-		" custom
-		autocmd FileType cs nmap <silent> <buffer> <Leader>gd <Plug>(omnisharp_go_to_definition)
-		autocmd FileType cs nmap <silent> <buffer> <Leader>fu <Plug>(omnisharp_find_usages)
-		autocmd FileType cs nmap <silent> <buffer> <Leader>fi <Plug>(omnisharp_find_implementations)
-		autocmd FileType cs nmap <silent> <buffer> <Leader>fs <Plug>(omnisharp_find_symbol)
-		autocmd FileType cs nmap <silent> <buffer> <Leader>pd <Plug>(omnisharp_preview_definition)
-		autocmd FileType cs nmap <silent> <buffer> <Leader>dc <Plug>(omnisharp_documentation)
-
-		"autocmd FileType cs :OmniSharpSetCd
 	augroup END
-
-	" ale
-	let g:ale_linters = {
-		\ 'cs': ['OmniSharp'],
-		\ 'go': ['golangci-lint'],
-		\ 'javascript': ['standard'],
-		\ }
-	let g:ale_fixers = {
-		\ 'javascript': ['standard'],
-		\ }
-	let g:ale_c_parse_makefile = 1
-
-	" lightline + bufferline
-	let g:lightline = {
-		\ 'colorscheme': 'darcula'
-		\ }
-	let g:lightline.tabline = {
-		\ 'left': [
-		\	['buffers'],
-		\ ],
-		\ 'right': [
-		\	['readonly']
-		\ ] }
-	let g:lightline.active = {
-		\ 'left': [
-		\	['mode', 'paste'],
-		\	['readonly', 'filename', 'modified']
-		\ ],
-		\ 'right': [
-		\	['linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok'],
-		\	['lineinfo'],
-		\	['percent'],
-		\	['fileformat', 'fileencoding', 'filetype'],
-		\ ] }
-	let g:lightline.component_expand = {
-		\ 'buffers': 'lightline#bufferline#buffers',
-		\ 'linter_checking': 'lightline#ale#checking',
-		\ 'linter_warnings': 'lightline#ale#warnings',
-		\ 'linter_errors': 'lightline#ale#errors',
-		\ 'linter_ok': 'lightline#ale#ok',
-		\ }
-	let g:lightline.component_type = {
-		\ 'buffers': 'tabsel',
-		\ 'linter_checking': 'left',
-		\ 'linter_warnings': 'warning',
-		\ 'linter_errors': 'error',
-		\ 'linter_ok': 'left',
-		\ }
-	let g:lightline#bufferline#show_number = 1
-	let g:lightline#bufferline#filename_modifier = ':t'
 endif
 
-" set cd to sln path, if possible
-command! OmniSharpSetCd call <SID>setcd()
-function! s:setcd()
-	if exists('b:OmniSharp_buf_server')
-		exe 'cd ' . fnamemodify(b:OmniSharp_buf_server, ':p:h')
-	endif
-endfunction
-
-nnoremap <leader>at :ALEToggle<CR>
-
-nnoremap <silent> <C-n> :NERDTreeToggle<CR>
 nnoremap <silent> <C-p> :Files<CR>
+nnoremap <silent> <C-b> :Buffers<CR>
 
